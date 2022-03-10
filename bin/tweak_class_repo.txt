@@ -1,0 +1,46 @@
+To update all branches to a new version of minitest in the Gemfile,
+create an expressions.txt file containing the lines:
+  
+  gem 'minitest', '~> 5.11'==>gem 'minitest', '~> 5.15'
+  gem 'terminal-table'==>gem 'terminal-table', '~> 3'
+  def update(player:, io:)==>def update(player, io)
+  notify_observers(player: player, io: scoresheet_output)==>notify_observers(player, scoresheet_output)
+  "\n+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+\n" +==>"\n+-------+-------+-------+-------+-------+-------+-------+-------+-------+-----------+\n" +
+  "+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+\n" +==>"+save---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+\n" +
+  "+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+\n"==>"+-------+-------+-------+-------+-------+-------+-------+-------+-------+-----------+\n"
+  "+save---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+\n" +==>"+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+\n" +
+
+    Notes:
+      minitest is now 5.15 and terminal-table 3.0.2
+      The +--- line changes are because the new terminal-table produces different output.
+      The changes to update and notify_observers are because Ruby 3 keyword args are separated, and Observable passes positional args.
+
+and run
+> git filter-repo --replace-text expressions.txt --force --dry-run
+
+> remove Gemfile.lock from all branches
+> git filter-repo --invert-paths --path Gemfile.lock 
+
+.gitignore
+  .DS_Store
+  Gemfile.lock
+
+to add .gitignore to all branches
+> git filter-repo --force --dry-run --commit-callback "if not commit.parents: commit.file_changes.append(FileChange(b'M', b'.gitignore', b'$(git hash-object -w .gitignore)', b'100644'))"
+> git filter-repo --force           --commit-callback "if not commit.parents: commit.file_changes.append(FileChange(b'M', b'.gitignore', b'$(git hash-object -w .gitignore)', b'100644'))"
+
+
+this deletes the remotes, so afterward:
+> git remote add origin git@github.com:PotatoCanyon/exercises2.git
+> git push origin --force --all
+> git push --set-upstream origin main --force
+> git push origin --force --tags
+
+> git for-each-ref --format="delete %(refname)" refs/original | git update-ref --stdin
+> git reflog expire --expire=now --all
+> git gc --prune=now
+
+
+
+> git rev-list --all | xargs -n1 -I{} sh -c 'echo "\n\n===========================" && git checkout -q {} && echo "{} $(git show -s --format=%s {})\n" && ruby test/bowling_test.rb' &> test_output.txt
+
