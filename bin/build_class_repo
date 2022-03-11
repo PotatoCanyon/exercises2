@@ -14,7 +14,7 @@ load '../teach/bin/build_course_repo'
 class_name = ARGV[2] # pushed on by teach/bin/build_course_repo
 
 `git commit -m 'Create repo for #{class_name}'`
-`git push origin master`
+`git push origin main`
 
 
 # I should fix the bin folders in all the branches of the exercises2 repo, but for now
