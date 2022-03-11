@@ -1,6 +1,8 @@
 To update all branches to a new version of minitest in the Gemfile,
 create an expressions.txt file containing the lines:
   
+  Copyright 2013-20xx TorgqueForge, LLC==>Copyright 2013-20xx Potato Canyon Software, LLC
+  git@github.com:torqueforge==>git@github.com:PotatoCanyon
   gem 'minitest', '~> 5.11'==>gem 'minitest', '~> 5.15'
   gem 'terminal-table'==>gem 'terminal-table', '~> 3'
   def update(player:, io:)==>def update(player, io)
