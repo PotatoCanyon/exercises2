@@ -44,5 +44,5 @@ this deletes the remotes, so afterward:
 
 
 
-> git rev-list --all | xargs -n1 -I{} sh -c 'echo "\n\n===========================" && git checkout -q {} && echo "{} $(git show -s --format=%s {})\n" && ruby test/bowling_test.rb' &> test_output.txt
+> git rev-list --all | xargs -n1 -I@ sh -c 'echo "\n\n===========================" && git checkout -q @ && echo "@ $(git show -s --format=%s @)\n" && ruby test/bowling_test.rb' &> test_output.txt
 
